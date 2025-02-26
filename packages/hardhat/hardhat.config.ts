@@ -11,11 +11,7 @@ import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 
 // If not set, it uses the hardhat account 0 private key.
-const deployerPrivateKey =
-  process.env.DEPLOYER_PRIVATE_KEY ?? "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-
-// If not set, it uses ours Etherscan default API key.
-// const etherscanApiKey = process.env.ETHERSCAN_API_KEY || "DNXJA8RX2Q3VZ4URQIWP7Z68CJXQZSC6AW";
+const deployerPrivateKey = process.env.DEPLOYER_PRIVATE_KEY || ""; // This will now pull from the .env file
 
 // forking rpc url
 const forkingURL = process.env.FORKING_URL || "";
@@ -35,7 +31,7 @@ const config: HardhatUserConfig = {
       },
     ],
   },
-  defaultNetwork: "localhost",
+  defaultNetwork: "monadTestnet",
   namedAccounts: {
     deployer: {
       // By default, it will take the first Hardhat account as the deployer
@@ -43,8 +39,6 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
-    // View the networks that are pre-configured.
-    // If the network you are looking for is not here you can add new network settings
     hardhat: {
       forking: {
         url: forkingURL,
@@ -52,9 +46,9 @@ const config: HardhatUserConfig = {
       },
     },
     monadTestnet: {
-      url: "https://testnet-rpc.monad.xyz",
-      accounts: [deployerPrivateKey],
-      chainId: 10143,
+      url: process.env.MONAD_RPC_URL,
+      accounts: deployerPrivateKey ? [deployerPrivateKey] : [],
+      chainId: Number(process.env.MONAD_CHAIN_ID),
     },
   },
   // configuration for harhdat-verify plugin
